@@ -28,7 +28,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import javax.swing.AbstractButton;
 import javax.swing.DefaultComboBoxModel;
+import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -75,6 +77,22 @@ public class SwingCoreDebug {
 
    public SwingCoreDebug(SwingCoreCtx scc) {
       this.scc = scc;
+   }
+
+   public void d(AbstractButton c, Dctx dc) {
+      dc.root(c, "AbstractButton");
+      dc.appendVarWithSpace("text", c.getText());
+      dc.nl();
+      dc.appendVarWithSpace("isSelected", c.isSelected());
+      dc.appendVarWithSpace("isBorderPainted", c.isBorderPainted());
+      dc.appendVarWithSpace("isContentAreaFilled", c.isContentAreaFilled());
+      dc.appendVarWithSpace("isFocusPainted", c.isFocusPainted());
+      dc.appendVarWithSpace("isRolloverEnabled", c.isRolloverEnabled());
+
+      this.d(c.getIcon(), dc, "Icon");
+      this.d(c.getDisabledIcon(), dc, "disabledIcon");
+
+      this.d((JButton) c, dc.newLevel());
    }
 
    public String d(ActionEvent e) {
@@ -173,16 +191,6 @@ public class SwingCoreDebug {
       }
    }
 
-   public void d1(Font f, Dctx dc) {
-      dc.root(f, "Font");
-      dc.appendVarWithSpace("name", f.getName());
-      dc.appendVarWithSpace("fontName", f.getFontName());
-      dc.appendVarWithSpace("Family", f.getFamily());
-      dc.appendVarWithSpace("Size", f.getSize());
-      dc.appendVarWithSpace("Style", f.getStyle());
-      dc.appendVarWithSpace("NumGlyphs", f.getNumGlyphs());
-   }
-
    public void d(Frame c, Dctx dc) {
       dc.root(c, "Frame");
       dc.appendVarWithSpace("Title", c.getTitle());
@@ -194,47 +202,6 @@ public class SwingCoreDebug {
       Dctx dc = new Dctx(getUC());
       d(g, dc);
       return dc.toString();
-   }
-
-   public void d(RenderingHints r, Dctx dc) {
-      dc.root(r, "RenderingHints");
-
-      dc.nl();
-      Object key = RenderingHints.KEY_ANTIALIASING;
-      String var = "Anti Alias Geo";
-      boolean b = r.containsKey(key);
-      if (b) {
-         Object object = r.get(key);
-         if (object == RenderingHints.VALUE_ANTIALIAS_DEFAULT) {
-            dc.appendVar(var, "default");
-         } else if (object == RenderingHints.VALUE_ANTIALIAS_OFF) {
-            dc.appendVar(var, "off");
-         } else if (object == RenderingHints.VALUE_ANTIALIAS_ON) {
-            dc.appendVar(var, "on");
-         } else {
-            dc.appendVar(var, "error value?" + object.toString());
-         }
-      } else {
-         dc.appendVar("Key not set for", var);
-      }
-      dc.nl();
-      key = RenderingHints.KEY_TEXT_ANTIALIASING;
-      var = "Anti Alias Text";
-      b = r.containsKey(key);
-      if (b) {
-         Object object = r.get(key);
-         if (object == RenderingHints.VALUE_TEXT_ANTIALIAS_DEFAULT) {
-            dc.appendVar(var, "default");
-         } else if (object == RenderingHints.VALUE_TEXT_ANTIALIAS_OFF) {
-            dc.appendVar(var, "off");
-         } else if (object == RenderingHints.VALUE_TEXT_ANTIALIAS_ON) {
-            dc.appendVar(var, "on");
-         } else {
-            dc.appendVar(var, "error value?" + object.toString());
-         }
-      } else {
-         dc.appendVar("Key not set for", var);
-      }
    }
 
    public void d(Graphics2D g, Dctx dc) {
@@ -279,20 +246,33 @@ public class SwingCoreDebug {
 
    }
 
-   public void d(JLabel c, Dctx dc) {
-      dc.root(c, "JLabel");
-      dc.appendVarWithSpace("text", c.getText());
-      this.d((JComponent) c, dc.newLevel());
+   public void d(Icon c, Dctx dc) {
+      dc.root(c, "Icon");
+      dc.appendVarWithSpace("w", c.getIconWidth());
+      dc.appendVarWithSpace("h", c.getIconHeight());
+   }
+
+   public void d(Icon c, Dctx dc, String title) {
+      if (c == null) {
+         dc.append(title + "is  null");
+      } else {
+         dc.root(c, "Icon");
+         dc.appendVarWithSpace("title", title);
+         dc.appendVarWithSpace("w", c.getIconWidth());
+         dc.appendVarWithSpace("h", c.getIconHeight());
+      }
    }
 
    public void d(JButton c, Dctx dc) {
       dc.root(c, "JButton");
-      dc.appendVarWithSpace("text", c.getText());
+      dc.appendVarWithSpace("isDefaultButton", c.isDefaultButton());
+      dc.appendVarWithSpace("isDefaultCapable", c.isDefaultCapable());
       this.d((JComponent) c, dc.newLevel());
    }
 
    public void d(JComponent c, Dctx dc) {
       dc.root(c, "JComponent");
+      dc.appendVarWithSpace("did", c.getName());
       dc.appendVarWithSpace("x", c.getX());
       dc.appendVarWithSpace("y", c.getY());
       dc.appendVarWithSpace("w", c.getWidth());
@@ -300,7 +280,9 @@ public class SwingCoreDebug {
       dc.appendVarWithSpace("pw", c.getPreferredSize().getWidth());
       dc.appendVarWithSpace("ph", c.getPreferredSize().getHeight());
       dc.nl();
-      dc.append(" Located at " + c.getLocation().x + "," + c.getLocation().y);
+      dc.append("Located at " + c.getLocation().x + "," + c.getLocation().y);
+      dc.append(" ");
+      dc.append("Size is " + c.getWidth() + "," + c.getHeight());
       dc.nl();
       JPopupMenu popMenu = c.getComponentPopupMenu();
       if (popMenu == null) {
@@ -321,11 +303,10 @@ public class SwingCoreDebug {
       d((Frame) c, dc.newLevel());
    }
 
-   public void d1(JLayeredPane c, Dctx dc) {
-      dc.root1Line(c, "JLayeredPane");
-      dc.appendVarWithSpace("lowestLayer", c.lowestLayer());
-      dc.appendVarWithSpace("highestLayer", c.highestLayer());
-      this.d((JComponent) c, dc.newLevel1Line());
+   public void d(JLabel c, Dctx dc) {
+      dc.root(c, "JLabel");
+      dc.appendVarWithSpace("text", c.getText());
+      this.d((JComponent) c, dc.newLevel());
    }
 
    public void d(JLayeredPane c, Dctx dc) {
@@ -413,6 +394,19 @@ public class SwingCoreDebug {
       dFind(view, dc);
    }
 
+   public String d(KeyEvent e) {
+      Dctx dc = new Dctx(getUC());
+      d(e, dc);
+      return dc.toString();
+   }
+
+   public void d(KeyEvent e, Dctx dc) {
+      dc.root1Line(e, "KeyEvent");
+      dc.appendVarWithSpace("code", e.getKeyCode());
+      dc.appendVarWithSpace("char", e.getKeyChar());
+      dc.appendVarWithSpace("txt", KeyEvent.getKeyText(e.getKeyCode()));
+   }
+
    public void d(MenuElement e, Dctx dc) {
       dc.root(e, "MenuElement");
    }
@@ -442,6 +436,47 @@ public class SwingCoreDebug {
       dc.sameLineO1(e.getSource(), "Source", scc);
    }
 
+   public void d(RenderingHints r, Dctx dc) {
+      dc.root(r, "RenderingHints");
+
+      dc.nl();
+      Object key = RenderingHints.KEY_ANTIALIASING;
+      String var = "Anti Alias Geo";
+      boolean b = r.containsKey(key);
+      if (b) {
+         Object object = r.get(key);
+         if (object == RenderingHints.VALUE_ANTIALIAS_DEFAULT) {
+            dc.appendVar(var, "default");
+         } else if (object == RenderingHints.VALUE_ANTIALIAS_OFF) {
+            dc.appendVar(var, "off");
+         } else if (object == RenderingHints.VALUE_ANTIALIAS_ON) {
+            dc.appendVar(var, "on");
+         } else {
+            dc.appendVar(var, "error value?" + object.toString());
+         }
+      } else {
+         dc.appendVar("Key not set for", var);
+      }
+      dc.nl();
+      key = RenderingHints.KEY_TEXT_ANTIALIASING;
+      var = "Anti Alias Text";
+      b = r.containsKey(key);
+      if (b) {
+         Object object = r.get(key);
+         if (object == RenderingHints.VALUE_TEXT_ANTIALIAS_DEFAULT) {
+            dc.appendVar(var, "default");
+         } else if (object == RenderingHints.VALUE_TEXT_ANTIALIAS_OFF) {
+            dc.appendVar(var, "off");
+         } else if (object == RenderingHints.VALUE_TEXT_ANTIALIAS_ON) {
+            dc.appendVar(var, "on");
+         } else {
+            dc.appendVar(var, "error value?" + object.toString());
+         }
+      } else {
+         dc.appendVar("Key not set for", var);
+      }
+   }
+
    public void d(Window c, Dctx dc) {
       dc.root(c, "Window");
       dc.appendVarWithSpace("isActive", c.isActive());
@@ -449,88 +484,6 @@ public class SwingCoreDebug {
       dc.appendVarWithSpace("isCursorSet", c.isCursorSet());
       dc.appendVarWithSpace("isAlwaysOnTop", c.isAlwaysOnTop());
       d((Container) c, dc.newLevel());
-   }
-
-   public void dFontsAll(Dctx dc) {
-      Font[] fonts = GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts();
-      dc.root(fonts, "Swing Fonts");
-
-      dc.appendVarWithSpace("Num#", fonts.length);
-
-      List monoFonts1 = new ArrayList();
-
-      IntToObjects monos = new IntToObjects(scc.getUCtx());
-      IntToObjects monosNo = new IntToObjects(scc.getUCtx());
-
-      //FontRenderContext frc = new FontRenderContext(null, RenderingHints.VALUE_TEXT_ANTIALIAS_OFF, RenderingHints.VALUE_FRACTIONALMETRICS_DEFAULT);
-      FontRenderContext frc = new FontRenderContext(null, false, false);
-
-      //size of m for fontpoint of 12
-      for (Font font : fonts) {
-         //
-         Font font12 = font.deriveFont(12f);
-         Rectangle2D iBounds = font12.getStringBounds("i", frc);
-         Rectangle2D mBounds = font12.getStringBounds("m", frc);
-
-         double width = mBounds.getWidth();
-         if (iBounds.getWidth() == width) {
-            monos.add(font12, (int) width);
-         } else {
-            monosNo.add(font12, (int) width);
-         }
-      }
-      dc.line();
-      dc.appendVarWithSpace("Num Monospace Fonts#", monos.getSize());
-      dc.tab();
-      for (int index = 0; index < monos.getLength(); index++) {
-         Font f = (Font) monos.getObjectAtIndex(index);
-         dc.line();
-         dc.append(index + 1);
-         dc.append("\t");
-         dc.append("m=");
-         dc.append(monos.getInt(index));
-         dc.append("\t");
-         dc.append(f.getFontName());
-         dc.append("\t");
-         dc.append("\t -> Family='");
-         dc.append(f.getFamily());
-         dc.append("'");
-      }
-      dc.tabRemove();
-
-      dc.line();
-      dc.appendVarWithSpace("Num Proportional Fonts#", monos.getSize());
-      dc.tab();
-      for (int index = 0; index < monosNo.getLength(); index++) {
-         Font f = (Font) monosNo.getObjectAtIndex(index);
-         dc.line();
-         dc.append(index + 1);
-         dc.append("\t");
-         dc.append("m=");
-         dc.append(monosNo.getInt(index));
-         dc.append("\t name='");
-         dc.append(f.getFontName());
-         dc.append("'\t");
-         dc.append("\t -> Family='");
-         dc.append(f.getFamily());
-         dc.append("'");
-      }
-      dc.tabRemove();
-
-      String[] ar = new String[monoFonts1.size()];
-      for (int i = 0; i < ar.length; i++) {
-         ar[i] = ((Font) monoFonts1.get(i)).getFontName();
-      }
-
-      String[] fontFamilies = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
-      dc.appendVarWithSpace("Number of Font Families #", fontFamilies.length);
-      for (int i = 0; i < fontFamilies.length; i++) {
-         dc.line();
-         dc.append(i + 1);
-         dc.append("\t");
-         dc.append(fontFamilies[i]);
-      }
-
    }
 
    public String d(WindowEvent e) {
@@ -544,6 +497,11 @@ public class SwingCoreDebug {
       dc.appendVarWithSpace("oldState", ToStringStaticSwingCore.toStringStateWindow(e.getOldState()));
       dc.appendVarWithSpace("newState", ToStringStaticSwingCore.toStringStateWindow(e.getNewState()));
       dc.nlLvlO(e.getWindow(), "Window", scc);
+   }
+
+   public void d1(AbstractButton c, Dctx dc) {
+      dc.root(c, "AbstractButton");
+      this.d1((JButton) c, dc.newLevel1Line());
    }
 
    public String d1(ActionEvent e) {
@@ -630,6 +588,16 @@ public class SwingCoreDebug {
       dc.appendVarWithSpace("text", data);
    }
 
+   public void d1(Font f, Dctx dc) {
+      dc.root(f, "Font");
+      dc.appendVarWithSpace("name", f.getName());
+      dc.appendVarWithSpace("fontName", f.getFontName());
+      dc.appendVarWithSpace("Family", f.getFamily());
+      dc.appendVarWithSpace("Size", f.getSize());
+      dc.appendVarWithSpace("Style", f.getStyle());
+      dc.appendVarWithSpace("NumGlyphs", f.getNumGlyphs());
+   }
+
    public String d1(ItemEvent e) {
       Dctx dc = new Dctx(getUC());
       d1(e, dc);
@@ -639,6 +607,12 @@ public class SwingCoreDebug {
    public void d1(ItemEvent e, Dctx dc) {
       dc.root1Line(e, "ItemEvent");
       dc.sameLineO1(e.getSource(), "Source", scc);
+   }
+
+   public void d1(JButton c, Dctx dc) {
+      dc.root1Line(c, "JButton");
+      dc.appendVarWithSpace("text", c.getText());
+      this.d1((JComponent) c, dc.newLevel1Line());
    }
 
    public void d1(JComponent c, Dctx dc) {
@@ -653,16 +627,17 @@ public class SwingCoreDebug {
       dc.appendVarWithSpace("ComponentCount", c.getComponentCount());
    }
 
-   public void d1(JButton c, Dctx dc) {
-      dc.root1Line(c, "JButton");
-      dc.appendVarWithSpace("text", c.getText());
-      this.d1((JComponent) c, dc.newLevel1Line());
-   }
-
    public void d1(JLabel c, Dctx dc) {
       dc.root1Line(c, "JLabel");
       dc.appendVarWithSpace("text", c.getText());
       this.d1((JComponent) c, dc.newLevel1Line());
+   }
+
+   public void d1(JLayeredPane c, Dctx dc) {
+      dc.root1Line(c, "JLayeredPane");
+      dc.appendVarWithSpace("lowestLayer", c.lowestLayer());
+      dc.appendVarWithSpace("highestLayer", c.highestLayer());
+      this.d((JComponent) c, dc.newLevel1Line());
    }
 
    public void d1(JPopupMenu e, Dctx dc) {
@@ -714,10 +689,6 @@ public class SwingCoreDebug {
       dc.append(']');
       dc.appendVarWithSpace("isConsumed", e.isConsumed());
 
-   }
-
-   public UCtx getUC() {
-      return scc.getUCtx();
    }
 
    public String d1(PropertyChangeEvent e) {
@@ -786,8 +757,8 @@ public class SwingCoreDebug {
     * @param dc
     */
    public void dFind(JComponent c, Dctx dc) {
-      if (c instanceof JButton) {
-         d((JButton) c, dc);
+      if (c instanceof AbstractButton) {
+         d((AbstractButton) c, dc);
       } else if (c instanceof JTextPane) {
          d((JTextPane) c, dc);
       } else if (c instanceof JScrollPane) {
@@ -811,8 +782,8 @@ public class SwingCoreDebug {
    }
 
    public void dFind1(JComponent c, Dctx dc) {
-      if (c instanceof JButton) {
-         d1((JButton) c, dc);
+      if (c instanceof AbstractButton) {
+         d1((AbstractButton) c, dc);
       } else if (c instanceof JLabel) {
          d1((JLabel) c, dc);
       } else if (c instanceof JTextPane) {
@@ -835,6 +806,92 @@ public class SwingCoreDebug {
          dc.appendWithSpace("Could not find the 1line debug method for " + c.getClass().getName());
          d1((JComponent) c, dc.newLevel1Line());
       }
+   }
+
+   public void dFontsAll(Dctx dc) {
+      Font[] fonts = GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts();
+      dc.root(fonts, "Swing Fonts");
+
+      dc.appendVarWithSpace("Num#", fonts.length);
+
+      List monoFonts1 = new ArrayList();
+
+      IntToObjects monos = new IntToObjects(scc.getUCtx());
+      IntToObjects monosNo = new IntToObjects(scc.getUCtx());
+
+      //FontRenderContext frc = new FontRenderContext(null, RenderingHints.VALUE_TEXT_ANTIALIAS_OFF, RenderingHints.VALUE_FRACTIONALMETRICS_DEFAULT);
+      FontRenderContext frc = new FontRenderContext(null, false, false);
+
+      //size of m for fontpoint of 12
+      for (Font font : fonts) {
+         //
+         Font font12 = font.deriveFont(12f);
+         Rectangle2D iBounds = font12.getStringBounds("i", frc);
+         Rectangle2D mBounds = font12.getStringBounds("m", frc);
+
+         double width = mBounds.getWidth();
+         if (iBounds.getWidth() == width) {
+            monos.add(font12, (int) width);
+         } else {
+            monosNo.add(font12, (int) width);
+         }
+      }
+      dc.line();
+      dc.appendVarWithSpace("Num Monospace Fonts#", monos.getSize());
+      dc.tab();
+      for (int index = 0; index < monos.getLength(); index++) {
+         Font f = (Font) monos.getObjectAtIndex(index);
+         dc.line();
+         dc.append(index + 1);
+         dc.append("\t");
+         dc.append("m=");
+         dc.append(monos.getInt(index));
+         dc.append("\t");
+         dc.append(f.getFontName());
+         dc.append("\t");
+         dc.append("\t -> Family='");
+         dc.append(f.getFamily());
+         dc.append("'");
+      }
+      dc.tabRemove();
+
+      dc.line();
+      dc.appendVarWithSpace("Num Proportional Fonts#", monos.getSize());
+      dc.tab();
+      for (int index = 0; index < monosNo.getLength(); index++) {
+         Font f = (Font) monosNo.getObjectAtIndex(index);
+         dc.line();
+         dc.append(index + 1);
+         dc.append("\t");
+         dc.append("m=");
+         dc.append(monosNo.getInt(index));
+         dc.append("\t name='");
+         dc.append(f.getFontName());
+         dc.append("'\t");
+         dc.append("\t -> Family='");
+         dc.append(f.getFamily());
+         dc.append("'");
+      }
+      dc.tabRemove();
+
+      String[] ar = new String[monoFonts1.size()];
+      for (int i = 0; i < ar.length; i++) {
+         ar[i] = ((Font) monoFonts1.get(i)).getFontName();
+      }
+
+      String[] fontFamilies = GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames();
+      dc.appendVarWithSpace("Number of Font Families #", fontFamilies.length);
+      for (int i = 0; i < fontFamilies.length; i++) {
+         dc.line();
+         dc.append(i + 1);
+         dc.append("\t");
+         dc.append(fontFamilies[i]);
+      }
+
+   }
+
+   public UCtx getUC() {
+      return scc.getUCtx();
    }
 
    public boolean toString(Object o, Dctx dc) {

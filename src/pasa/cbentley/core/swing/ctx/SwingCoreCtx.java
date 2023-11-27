@@ -11,18 +11,31 @@ import pasa.cbentley.core.src5.ctx.C5Ctx;
 import pasa.cbentley.core.swing.stringables.StringableJFrame;
 import pasa.cbentley.core.swing.stringables.SwingCoreDebug;
 
+/**
+ * Provides core service of Swing
+ * 
+ * 
+ * @author Charles Bentley
+ *
+ */
 public class SwingCoreCtx extends J2seCtx {
 
-   private Thread         edt;
+   private static final int CTX_ID = 348;
+
+   private Thread           edt;
 
    //#debug
-   private SwingCoreDebug scd;
+   private SwingCoreDebug   scd;
 
    public SwingCoreCtx(C5Ctx c5) {
       super(c5);
 
       //#debug
       scd = new SwingCoreDebug(this);
+   }
+
+   public int getCtxID() {
+      return CTX_ID;
    }
 
    /**
