@@ -1,8 +1,8 @@
 package pasa.cbentley.core.swing.ctx;
 
-import pasa.cbentley.core.src4.ctx.IFlagsToString;
+import pasa.cbentley.core.src4.ctx.IToStringFlags;
 
-public interface IFlagsToStringSwingCore extends IFlagsToString {
+public interface IFlagsToStringSwingCore extends IToStringFlags {
 
    /**
     * 
