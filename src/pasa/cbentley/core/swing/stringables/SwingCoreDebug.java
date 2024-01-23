@@ -169,11 +169,9 @@ public class SwingCoreDebug {
       dc.appendVarWithSpace("ItalicAngle", f.getItalicAngle());
 
       dc.nl();
-      Attribute[] availableAttributes = f.getAvailableAttributes();
-      dc.appendVar("AvailableAttributes", availableAttributes.length);
-      if (dc.hasFlagData(scc, IFlagsToStringSwingCore.TOSTRING_FLAG_3_IGNORE_FONT_ATTRIBUTES)) {
-         dc.append(" Listing Attributes Ignored");
-      } else {
+      if (dc.hasFlagData(scc, IFlagsToStringSwingCore.TOSTRING_FLAG_3_SHOW_FONT_ATTRIBUTES)) {
+         Attribute[] availableAttributes = f.getAvailableAttributes();
+         dc.appendVar("AvailableAttributes", availableAttributes.length);
          for (int i = 0; i < availableAttributes.length; i++) {
             dc.nl();
             Attribute at = availableAttributes[i];

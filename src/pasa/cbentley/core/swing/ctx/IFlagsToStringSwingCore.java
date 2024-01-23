@@ -7,7 +7,7 @@ public interface IFlagsToStringSwingCore extends IToStringFlags {
    /**
     * 
     */
-   public static final int TOSTRING_FLAG_3_IGNORE_FONT_ATTRIBUTES = 1 << 2;
+   public static final int TOSTRING_FLAG_3_SHOW_FONT_ATTRIBUTES = 1 << 2;
    /**
     * When debugging fonts, we want the complete font setup
     */
