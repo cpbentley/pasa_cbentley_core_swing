@@ -41,7 +41,7 @@ public abstract class StringableAbstract implements IStringable {
    }
 
    public UCtx toStringGetUCtx() {
-      return scc.getUCtx();
+      return scc.getUC();
    }
 
    //#enddebug

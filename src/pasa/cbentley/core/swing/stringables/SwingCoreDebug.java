@@ -814,8 +814,8 @@ public class SwingCoreDebug {
 
       List monoFonts1 = new ArrayList();
 
-      IntToObjects monos = new IntToObjects(scc.getUCtx());
-      IntToObjects monosNo = new IntToObjects(scc.getUCtx());
+      IntToObjects monos = new IntToObjects(scc.getUC());
+      IntToObjects monosNo = new IntToObjects(scc.getUC());
 
       //FontRenderContext frc = new FontRenderContext(null, RenderingHints.VALUE_TEXT_ANTIALIAS_OFF, RenderingHints.VALUE_FRACTIONALMETRICS_DEFAULT);
       FontRenderContext frc = new FontRenderContext(null, false, false);
@@ -889,7 +889,7 @@ public class SwingCoreDebug {
    }
 
    public UCtx getUC() {
-      return scc.getUCtx();
+      return scc.getUC();
    }
 
    public boolean toString(Object o, Dctx dc) {

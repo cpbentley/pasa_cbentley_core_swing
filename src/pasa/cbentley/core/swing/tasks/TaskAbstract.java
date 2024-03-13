@@ -54,7 +54,7 @@ public abstract class TaskAbstract implements IStringable, Runnable, ActionListe
    }
 
    public UCtx toStringGetUCtx() {
-      return scc.getUCtx();
+      return scc.getUC();
    }
 
    //#enddebug

@@ -10,7 +10,7 @@ public class TaskGroup extends TaskAbstract {
 
    public TaskGroup(SwingCoreCtx scc) {
       super(scc);
-      this.c = new IntToObjects(scc.getUCtx());
+      this.c = new IntToObjects(scc.getUC());
 
    }
 
