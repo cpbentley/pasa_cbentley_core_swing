@@ -1,6 +1,8 @@
 package pasa.cbentley.core.swing.ctx;
 
+import java.awt.Component;
 import java.awt.EventQueue;
+import java.awt.event.ComponentEvent;
 
 import javax.swing.JFrame;
 
@@ -34,10 +36,6 @@ public class SwingCoreCtx extends J2seCoreCtx {
       scd = new SwingCoreDebug(this);
    }
 
-   public int getCtxID() {
-      return CTX_ID;
-   }
-
    /**
     * Call this from outside the AWT thread.
     * @param run
@@ -65,6 +63,10 @@ public class SwingCoreCtx extends J2seCoreCtx {
 
    }
 
+   public int getCtxID() {
+      return CTX_ID;
+   }
+
    //#mdebug
    public SwingCoreDebug toSCD() {
       return scd;
@@ -80,10 +82,51 @@ public class SwingCoreCtx extends J2seCoreCtx {
       super.toString(dc.sup());
    }
 
+   public boolean toString(Dctx dc, Object o) {
+      if (o instanceof ComponentEvent) {
+         toStringComponentEvent(dc, (ComponentEvent) o);
+         return true;
+      }
+      return false;
+   }
+
    public void toString1Line(Dctx dc) {
       dc.root1Line(this, SwingCoreCtx.class);
       toStringPrivate(dc);
       super.toString1Line(dc.sup1Line());
+   }
+
+   public boolean toString1Line(Dctx dc, Object o) {
+      if (o instanceof ComponentEvent) {
+         toStringComponentEvent1Line(dc, (ComponentEvent) o);
+         return true;
+      }
+      return false;
+   }
+
+   private void toStringComponentEvent(Dctx dc, ComponentEvent o) {
+      dc.root(o, ComponentEvent.class, SwingCoreCtx.class, 57);
+
+      Component co = o.getComponent();
+      dc.nl();
+
+   }
+
+   private void toStringComponentEvent1Line(Dctx dc, ComponentEvent o) {
+      dc.root1Line(o, ComponentEvent.class, SwingCoreCtx.class, 57);
+
+      Component co = o.getComponent();
+
+      dc.append("[");
+      dc.append(co.getX());
+      dc.append(",");
+      dc.append(co.getY());
+      dc.append(" - ");
+      dc.append(co.getWidth());
+      dc.append(",");
+      dc.append(co.getHeight());
+      dc.append("]");
+
    }
 
    private void toStringPrivate(Dctx dc) {
