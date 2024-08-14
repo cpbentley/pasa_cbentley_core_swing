@@ -4,7 +4,7 @@ import java.awt.EventQueue;
 
 import javax.swing.JFrame;
 
-import pasa.cbentley.core.j2se.ctx.J2seCtx;
+import pasa.cbentley.core.j2se.ctx.J2seCoreCtx;
 import pasa.cbentley.core.src4.logging.Dctx;
 import pasa.cbentley.core.src5.ctx.C5Ctx;
 //#debug
@@ -18,9 +18,9 @@ import pasa.cbentley.core.swing.stringables.SwingCoreDebug;
  * @author Charles Bentley
  *
  */
-public class SwingCoreCtx extends J2seCtx {
+public class SwingCoreCtx extends J2seCoreCtx {
 
-   private static final int CTX_ID = 348;
+   private static final int CTX_ID = 101;
 
    private Thread           edt;
 
