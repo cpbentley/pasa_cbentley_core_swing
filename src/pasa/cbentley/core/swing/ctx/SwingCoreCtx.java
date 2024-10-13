@@ -3,6 +3,7 @@ package pasa.cbentley.core.swing.ctx;
 import java.awt.Component;
 import java.awt.EventQueue;
 import java.awt.event.ComponentEvent;
+import java.awt.event.KeyEvent;
 
 import javax.swing.JFrame;
 
@@ -30,10 +31,17 @@ public class SwingCoreCtx extends J2seCoreCtx {
    private SwingCoreDebug   scd;
 
    public SwingCoreCtx(C5Ctx c5) {
-      super(c5);
+      this(null,c5);
+   }
+   public SwingCoreCtx(IConfigSwingCore config, C5Ctx c5) {
+      super((config == null) ? new ConfigSwingCoreDef() : config, c5);
 
       //#debug
       scd = new SwingCoreDebug(this);
+      
+      //#debug
+      toDLog().pCreate("", this, SwingCoreCtx.class, "Created@43", LVL_05_FINE, true);
+
    }
 
    /**
@@ -83,6 +91,9 @@ public class SwingCoreCtx extends J2seCoreCtx {
    }
 
    public boolean toString(Dctx dc, Object o) {
+      if(o instanceof KeyEvent) {
+         
+      }
       if (o instanceof ComponentEvent) {
          toStringComponentEvent(dc, (ComponentEvent) o);
          return true;
