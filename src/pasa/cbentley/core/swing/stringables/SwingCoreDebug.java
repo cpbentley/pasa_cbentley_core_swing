@@ -169,7 +169,7 @@ public class SwingCoreDebug {
       dc.appendVarWithSpace("ItalicAngle", f.getItalicAngle());
 
       dc.nl();
-      if (dc.hasFlagData(scc, IFlagsToStringSwingCore.TOSTRING_FLAG_3_SHOW_FONT_ATTRIBUTES)) {
+      if (dc.hasFlagToString(scc, IFlagsToStringSwingCore.TOSTRING_FLAG_3_SHOW_FONT_ATTRIBUTES)) {
          Attribute[] availableAttributes = f.getAvailableAttributes();
          dc.appendVar("AvailableAttributes", availableAttributes.length);
          for (int i = 0; i < availableAttributes.length; i++) {
@@ -184,7 +184,7 @@ public class SwingCoreDebug {
             }
          }
       }
-      if (dc.hasFlagData(scc, IFlagsToStringSwingCore.TOSTRING_FLAG_4_SHOW_FONT_ENVIRONEMT)) {
+      if (dc.hasFlagToString(scc, IFlagsToStringSwingCore.TOSTRING_FLAG_4_SHOW_FONT_ENVIRONEMT)) {
          dFontsAll(dc.newLevel());
       }
    }
